@@ -29,6 +29,7 @@ progress = (st.session_state.idx + 1) / len(level_sentences)
 st.progress(progress)
 st.write(f"**Sentence {st.session_state.idx + 1} / {len(level_sentences)}**")
 st.markdown(f"### {current_item['en']}")
+# Correct labels
 st.write(f"**Pronunciation:** {current_item['te']}")
 st.write(f"**Meaning:** {current_item['meaning']}")
 
