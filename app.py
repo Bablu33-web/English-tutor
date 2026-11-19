@@ -17,10 +17,18 @@ data = load_data()
 
 st.title("📚 English Tutor")
 
+# --- Level & Sentence Navigation ---
 selected_level = st.selectbox("🎯 Select Level", list(data.keys()))
 level_sentences = data[selected_level]
 
+if 'last_level' not in st.session_state: st.session_state.last_level = selected_level
 if 'idx' not in st.session_state: st.session_state.idx = 0
+
+# Reset index if level changes
+if st.session_state.last_level != selected_level:
+    st.session_state.idx = 0
+    st.session_state.last_level = selected_level
+
 if st.session_state.idx >= len(level_sentences): st.session_state.idx = 0
 current_item = level_sentences[st.session_state.idx]
 
@@ -57,6 +65,16 @@ if audio_input:
         except: st.error("Couldn't hear you clearly.")
     if os.path.exists("temp.wav"): os.remove("temp.wav")
 
-if st.button("➡️ Next Sentence"):
-    st.session_state.idx = (st.session_state.idx + 1) % len(level_sentences)
-    st.rerun()
+# --- Navigation Bar ---
+col1, col2 = st.columns(2)
+with col1:
+    if st.button("⬅️ Previous"):
+        if st.session_state.idx > 0:
+            st.session_state.idx -= 1
+            st.rerun()
+
+with col2:
+    if st.button("➡️ Next"):
+        if st.session_state.idx < len(level_sentences) - 1:
+            st.session_state.idx += 1
+            st.rerun()
